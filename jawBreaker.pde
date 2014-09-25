@@ -108,7 +108,7 @@ class JawBreaker {
   JawBreaker(PVector _o) {
     orig = _o;
     ribSz = 7*pow(PHI,floor(random(1,4)));
-    ribSz = 7;
+    //ribSz = 7;
     // println("ribSz: " + ribSz);
   }
 
@@ -116,16 +116,24 @@ class JawBreaker {
     edge.x = mouseX;
     edge.y = mouseY;
     float radius = PVector.dist(orig, edge);
-    for (int i=0; i<radius; i+=11) {
+    for (int i=0; i<radius; i+=11) { //<>//
       PVector currPxl = PVector.lerp(orig, edge, i/radius);
-      color s = src.get(round(currPxl.x), round(currPxl.y));
+      color s = src.get(round(currPxl.x), round(currPxl.y)); // i don;t remember why I need to use the round function here
       stroke(s);
       strokeWeight(ribSz);
 
       noFill();
-      ellipse(orig.x, orig.y, orig.dist(currPxl)*2, orig.dist(currPxl)*2);
+      // ellipse(orig.x, orig.y, orig.dist(currPxl)*2, orig.dist(currPxl)*2); //<>//
       // line(orig.x+i, lerp(orig.y, mouseY, i/radius), orig.x+i, height);
-      fill(s);
+      // float linelength = map(brightness(s), 0, 255, 0,TWO_PI); // brightness based, naming things is hard
+      float linelength = map(saturation(s), 0, 255, 0,TWO_PI); // brightness based, naming things is hard
+      // normalize 
+      // fuck it, just try it randomized.
+      // line length is a function of distance from the origin, 
+      // 
+      arc(orig.x, orig.y,  orig.dist(currPxl)*PHI,orig.dist(currPxl)*PHI, HALF_PI+PVector.angleBetween(edge, orig), HALF_PI+PVector.angleBetween(orig,edge)+linelength);
+      // arc(orig.x, orig.y,  orig.dist(currPxl)*PHI,orig.dist(currPxl)*PHI, 0, linelength);
+      fill(s); //<>//
       ellipse(mouseX, mouseY, 47, 47);
     }
     strokeWeight(.5);
@@ -155,4 +163,3 @@ String getSketchName() {
   String[] path = split(sketchPath, "/");
   return path[path.length-1];
 }
-
