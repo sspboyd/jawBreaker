@@ -31,12 +31,7 @@ void setup() {
   srcs[2] = loadImage("P1030193_4796867851_l.jpg");
   src = srcs[0];
 
-  if (PDFOUT) {
-    size(src.width, src.height, PDF, generateSaveImgFileName(".pdf"));
-  }
-  else {
-    size(src.width, src.height);
-  }
+
 
   margin = width * pow(PHI, 6);
   println("margin: " + margin);
@@ -52,6 +47,17 @@ void setup() {
   // jb = new JawBreaker(new PVector(0, 0));
   smooth();
   mainTitleF = createFont("Futura-Medium", 60);  //requires a font file in the data folder?
+}
+
+void settings(){
+
+    if (PDFOUT) {
+    size(src.width, src.height, PDF, generateSaveImgFileName(".pdf"));
+  }
+  else {
+    size(src.width, src.height);
+  }
+
 }
 
 void draw() {
@@ -160,6 +166,7 @@ void screenCap(String fileType) {
 }
 
 String getSketchName() {
-  String[] path = split(sketchPath, "/");
+  String spath = sketchPath();
+  String[] path = split(spath, "/");
   return path[path.length-1];
 }
