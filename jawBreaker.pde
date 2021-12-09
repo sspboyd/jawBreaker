@@ -22,17 +22,6 @@ int si = 0; // src index
 
 
 void setup() {
-  srcs = new PImage[6];
-  srcs[0] = loadImage("IMG00217-20110105-1634-cropped.jpg");
-  srcs[1] = loadImage("P1000889_4226705156_l.jpg");
-  srcs[3] = loadImage("P1020004_4498274926_l.jpg");
-  srcs[4] = loadImage("P1020746_4740563967_l.jpg");
-  srcs[5] = loadImage("P1020770_4740609177_l.jpg");
-  srcs[2] = loadImage("P1030193_4796867851_l.jpg");
-  src = srcs[0];
-
-
-
   margin = width * pow(PHI, 6);
   println("margin: " + margin);
   PLOT_X1 = margin;
@@ -45,13 +34,21 @@ void setup() {
 
   jbs = new ArrayList<JawBreaker>();
   // jb = new JawBreaker(new PVector(0, 0));
-  smooth();
+  // smooth();
   mainTitleF = createFont("Futura-Medium", 60);  //requires a font file in the data folder?
 }
 
 void settings(){
+  srcs = new PImage[6];
+  srcs[0] = loadImage("IMG00217-20110105-1634-cropped.jpg");
+  srcs[1] = loadImage("P1000889_4226705156_l.jpg");
+  srcs[3] = loadImage("P1020004_4498274926_l.jpg");
+  srcs[4] = loadImage("P1020746_4740563967_l.jpg");
+  srcs[5] = loadImage("P1020770_4740609177_l.jpg");
+  srcs[2] = loadImage("P1030193_4796867851_l.jpg");
+  src = srcs[0];
 
-    if (PDFOUT) {
+  if (PDFOUT) {
     size(src.width, src.height, PDF, generateSaveImgFileName(".pdf"));
   }
   else {
@@ -62,7 +59,7 @@ void settings(){
 
 void draw() {
   background(255);
-  image(src, 0, 0, width, height);
+  //image(src, 0, 0, width, height);
   if (showHelp) {
     //fill(255, 200);
     //stroke(255);
@@ -110,19 +107,27 @@ class JawBreaker {
   PVector orig = new PVector();
   PVector edge = new PVector();
   float ribSz; // ribbon size
+  float radiusMod;
+  int ringNum;
 
   JawBreaker(PVector _o) {
     orig = _o;
-    ribSz = 7*pow(PHI,floor(random(1,4)));
+    // ribSz = 7*pow(PHI,floor(random(1,4)));
+    ribSz = 7*pow(PHI,floor(random(.16,47)));
+    radiusMod = random(-.47, 47);
+    ringNum = int(random(3,47));
     //ribSz = 7;
     // println("ribSz: " + ribSz);
   }
 
   void render() {
+
+
     edge.x = mouseX;
     edge.y = mouseY;
-    float radius = PVector.dist(orig, edge);
-    for (int i=0; i<radius; i+=11) { //<>//
+    float radius = PVector.dist(orig, edge) * radiusMod;
+    
+    for (int i=0; i<radius; i+=ringNum) { //<>//
       PVector currPxl = PVector.lerp(orig, edge, i/radius);
       color s = src.get(round(currPxl.x), round(currPxl.y)); // i don;t remember why I need to use the round function here
       stroke(s);
@@ -151,7 +156,7 @@ class JawBreaker {
 
 String generateSaveImgFileName(String fileType) {
   String fileName;
-  // save functionality in here
+  // save functionality in here. 
   String outputDir = "savedImages/";
   String sketchName = getSketchName() + "-";
   String dateTimeStamp = "" + year() + nf(month(), 2) + nf(day(), 2) + nf(hour(), 2) + nf(minute(), 2) + nf(second(), 2);
